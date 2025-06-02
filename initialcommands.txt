@@ -1,0 +1,5 @@
+docker compose run --rm --user root namenode chown -R 1000:1000 /opt/hadoop/dfs/name
+docker compose run --rm --user root datanode chown -R 1000:1000 /opt/hadoop/dfs/data
+docker compose up -d
+
+docker-compose exec hadoop-client /opt/hadoop/scripts/run-jobs.sh

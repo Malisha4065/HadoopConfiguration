@@ -1,0 +1,24 @@
+FROM apache/hadoop:3.4.1
+
+USER root
+
+# Use CentOS Vault for EOL 7 repos
+RUN sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's|#baseurl=|baseurl=|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's|http://mirror.centos.org/centos/\$releasever|http://vault.centos.org/7.9.2009|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    yum clean all && \
+    yum makecache
+
+# Install OpenJDK 11
+RUN yum install -y java-11-openjdk-devel && \
+    yum clean all
+    
+# Set JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Drop back to the hadoop user
+USER hadoop
+
+# Keep container alive
+CMD ["bash"]
